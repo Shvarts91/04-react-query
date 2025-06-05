@@ -16,7 +16,7 @@ function App() {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [page, setPage] = useState<number>(1);
 
-  const { data, isPending, isError, isSuccess } = useQuery({
+  const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["myQueryKey", searchQuery, page],
     queryFn: () => fetchMovies(searchQuery, page),
     enabled: searchQuery.trim() !== "",
@@ -49,13 +49,16 @@ function App() {
   const handlePageChange = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
   };
+
+  console.log(isLoading);
+
   return (
     <>
       <SearchBar onSubmit={handleSearchSubmit} />
 
-      {isPending && <Loader />}
+      {isLoading && <Loader />}
 
-      {!isPending && isError && <ErrorMessage />}
+      {!isLoading && isError && <ErrorMessage />}
 
       {hasMovies && (
         <ReactPaginate
